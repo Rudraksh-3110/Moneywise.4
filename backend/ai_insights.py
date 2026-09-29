@@ -42,10 +42,20 @@ def get_ai_insights(user_id):
 
     goal_cards = []
     today = datetime.now().date()
+    earliest_saving = db.execute("SELECT MIN(created_at) first_date FROM savings WHERE user_id=?", (user_id,)).fetchone()["first_date"]
+    if earliest_saving and saved > 0:
+        try:
+            first_date = datetime.fromisoformat(earliest_saving).date()
+            months_elapsed = max(1, (today.year - first_date.year) * 12 + today.month - first_date.month + 1)
+            monthly_saving_rate = saved / months_elapsed
+        except ValueError:
+            monthly_saving_rate = saved
+    else:
+        monthly_saving_rate = 0
     for goal in goals[:5]:
         remaining = max(goal["target_amount"] - goal["current_amount"], 0)
         pct = min((goal["current_amount"] / goal["target_amount"] * 100) if goal["target_amount"] else 0, 100)
-        months = max(1, round(remaining / saved)) if remaining > 0 and saved > 0 else None
+        months = max(1, round(remaining / monthly_saving_rate)) if remaining > 0 and monthly_saving_rate > 0 else None
         deadline_note = ""
         if goal["deadline"]:
             try:
@@ -54,7 +64,7 @@ def get_ai_insights(user_id):
                 deadline_note = f" Deadline is in {max(days, 0)} days." if days >= 0 else " The recorded deadline has passed."
             except ValueError:
                 pass
-        estimate = f" At the current total savings rate, the remaining amount is roughly {months} month(s) away." if months else ""
+        estimate = f" At the current total savings rate, the remaining amount is roughly {months} month(s) away based on your recorded saving pace." if months else ""
         goal_cards.append({"name": goal["name"], "percent": round(pct), "remaining": remaining, "note": deadline_note + estimate})
 
     if not goals:
