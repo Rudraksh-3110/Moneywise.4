@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from datetime import datetime, date
+from datetime import datetime
 from backend.database import get_db, init_db, seed_db
 from backend.recommendations import get_recommendations
 from backend.chatbot import answer
@@ -11,8 +11,11 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "change-this-secret-key-in-production"
 app.config["DATABASE"] = "database/moneywise.db"
 
-init_db()
-seed_db()
+# Database setup must run inside a Flask application context because the
+# database helpers use Flask's current_app/g objects.
+with app.app_context():
+    init_db()
+    seed_db()
 
 def login_required(fn):
     @wraps(fn)
