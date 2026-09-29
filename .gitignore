@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+instance/
+database/moneywise.db
+.DS_Store
+.vscode/
