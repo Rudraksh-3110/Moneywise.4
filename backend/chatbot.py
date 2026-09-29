@@ -1,4 +1,5 @@
 from .database import get_db
+from .ai_insights import get_ai_insights
 
 def answer(message, user_id):
     m = message.lower().strip()
@@ -6,6 +7,11 @@ def answer(message, user_id):
     income = db.execute("SELECT COALESCE(SUM(amount),0) x FROM transactions WHERE user_id=? AND type='income'",(user_id,)).fetchone()["x"]
     expense = db.execute("SELECT COALESCE(SUM(amount),0) x FROM transactions WHERE user_id=? AND type='expense'",(user_id,)).fetchone()["x"]
     saved = db.execute("SELECT COALESCE(SUM(amount),0) x FROM savings WHERE user_id=?",(user_id,)).fetchone()["x"]
+
+    if any(w in m for w in ["analyze","analysis","pattern","spending pattern","financial health"]):
+        insights = get_ai_insights(user_id)
+        first = insights["insights"][0]
+        return f"{first[\"title\"]}: {first[\"text\"]} Open AI Insights for the full analysis."
 
     if any(w in m for w in ["balance","left","wallet"]):
         return f"Your recorded balance is ₹{income-expense-saved:,.2f}. This is based only on entries you have added to MoneyWise."
