@@ -5,6 +5,7 @@ from functools import wraps
 from datetime import datetime
 from backend.database import get_db, init_db, seed_db
 from backend.recommendations import get_recommendations
+from backend.ai_insights import get_ai_insights
 from backend.chatbot import answer
 from backend.quiz import get_quiz, grade_quiz
 
@@ -111,7 +112,7 @@ def financial_data(uid):
 def dashboard():
     uid = session["user_id"]
     data = financial_data(uid)
-    return render_template("dashboard.html", data=data, recommendations=get_recommendations(uid))
+    return render_template("dashboard.html", data=data, recommendations=get_recommendations(uid), ai_insights=get_ai_insights(uid))
 
 @app.route("/wallet", methods=["GET","POST"])
 @login_required
@@ -254,6 +255,11 @@ def chatbot():
             session["chat_history"] = history[-12:]
             session.modified = True
     return render_template("chatbot.html", history=history)
+
+@app.route("/ai-insights")
+@login_required
+def ai_insights():
+    return render_template("ai_insights.html", insights=get_ai_insights(session["user_id"]))
 
 @app.route("/api/summary")
 @login_required
