@@ -32,7 +32,11 @@ No Node.js, React, Express, or separate JavaScript backend is required.
 - Interactive money-literacy quiz
 - Money literacy resources
 - Offline MoneyWise fallback chatbot
-- Spending recommendations
+- Explainable, rule-based AI financial insights
+- Spending-pattern analysis from the signed-in user's records
+- Savings-rate and expense-ratio analysis
+- Saving-goal progress and timeline estimates
+- AI Insights dashboard
 - Responsive desktop/tablet/mobile layout
 - SVG visual effects
 - JSON-style API endpoint for dashboard summaries
@@ -73,9 +77,13 @@ Each account's transactions, savings, goals, learning progress, and quiz results
 
 The starter dataset contains links to established financial education providers. Some sources are jurisdiction-specific. Review local financial/tax rules before applying educational information to real decisions.
 
-## AI fallback
+## AI system
 
-The chatbot intentionally works without an external AI API. It is a rule-based educational fallback so the app remains usable offline. It is not a substitute for a qualified financial professional.
+MoneyWise uses a local, explainable rule-based AI layer rather than an external AI API. The AI combines the signed-in user's income, expenses, savings, spending categories, and saving goals to identify patterns and produce readable insights. The chatbot can also trigger the same analysis when the user asks about patterns or financial analysis.
+
+The AI layer is intentionally additive: it does not modify transactions, savings, goals, login data, or other existing workflows. If the AI layer is unavailable, the normal finance features remain independent. Because the analysis is rule-based, it should be described as explainable/rule-based AI rather than machine learning or generative AI.
+
+It is an educational tool and not a substitute for a qualified financial professional.
 
 ## Project structure
 
@@ -87,6 +95,7 @@ MoneyWise/
 ├── backend/
 │   ├── database.py
 │   ├── recommendations.py
+│   ├── ai_insights.py
 │   ├── chatbot.py
 │   └── quiz.py
 ├── database/
