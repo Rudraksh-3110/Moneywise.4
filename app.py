@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import datetime
@@ -8,11 +9,12 @@ from backend.chatbot import answer
 from backend.quiz import get_quiz, grade_quiz
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "change-this-secret-key-in-production"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or os.environ.get("MONEYWISE_SECRET_KEY") or "dev-only-change-this-secret"
 app.config["DATABASE"] = "database/moneywise.db"
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("RENDER") == "true"
 
-# Database setup must run inside a Flask application context because the
-# database helpers use Flask's current_app/g objects.
 with app.app_context():
     init_db()
     seed_db()
@@ -55,7 +57,9 @@ def register():
             cur = db.execute("INSERT INTO users(name,email,password_hash) VALUES(?,?,?)",
                              (name, email, generate_password_hash(password)))
             db.commit()
+            session.clear()
             session["user_id"] = cur.lastrowid
+            session.modified = True
             return redirect(url_for("dashboard"))
         except Exception:
             flash("That email is already registered.", "error")
@@ -71,13 +75,22 @@ def login():
         if user and check_password_hash(user["password_hash"], password):
             session.clear()
             session["user_id"] = user["id"]
+            session.modified = True
             return redirect(url_for("dashboard"))
         flash("Incorrect email or password.", "error")
     return render_template("login.html")
 
+@app.route("/switch-account")
+def switch_account():
+    session.clear()
+    session.modified = True
+    flash("Previous account signed out. You can now log in with another account.", "success")
+    return redirect(url_for("login"))
+
 @app.route("/logout")
 def logout():
     session.clear()
+    session.modified = True
     return redirect(url_for("index"))
 
 def financial_data(uid):
@@ -239,6 +252,7 @@ def chatbot():
             reply = answer(msg, session["user_id"])
             history.append({"user":msg, "bot":reply})
             session["chat_history"] = history[-12:]
+            session.modified = True
     return render_template("chatbot.html", history=history)
 
 @app.route("/api/summary")
