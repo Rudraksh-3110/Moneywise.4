@@ -11,7 +11,7 @@ def answer(message, user_id):
     if any(w in m for w in ["analyze","analysis","pattern","spending pattern","financial health"]):
         insights = get_ai_insights(user_id)
         first = insights["insights"][0]
-        return f"{first[\"title\"]}: {first[\"text\"]} Open AI Insights for the full analysis."
+        return f"{first['title']}: {first['text']} Open AI Insights for the full analysis."
 
     if any(w in m for w in ["balance","left","wallet"]):
         return f"Your recorded balance is ₹{income-expense-saved:,.2f}. This is based only on entries you have added to MoneyWise."
