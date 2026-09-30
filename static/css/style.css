@@ -77,3 +77,15 @@
 .what-if-grid{align-items:start;}
 .what-if-result{margin-top:18px;}
 .what-if-action{font-size:18px;color:var(--muted);}
+
+/* AI decision questionnaire */
+.scenario-form{display:grid;gap:18px;margin-top:18px;}
+.scenario-card h2{font-size:22px;margin-top:8px;max-width:1000px;}
+.scenario-number{font-size:10px;letter-spacing:.14em;font-weight:900;color:var(--accent);}
+.scenario-options{display:grid;gap:10px;margin-top:18px;}
+.scenario-option{display:flex;gap:12px;align-items:flex-start;padding:15px;border:1px solid var(--line);border-radius:13px;cursor:pointer;background:#fff;}
+.scenario-option:hover{background:#f5faf7;border-color:#b9d7c7;}
+.scenario-option input{margin-top:5px;accent-color:var(--accent);}
+.scenario-option span{font-weight:600;}
+.scenario-submit{justify-self:start;}
+.scenario-result{margin-top:18px;}
