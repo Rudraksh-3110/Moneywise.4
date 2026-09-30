@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}MoneyWise{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=desktop-width-20260930">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=layout-fix-20260930-2">
 </head>
-<body><div class="app-shell">
+<body><div class="app-shell{% if not current_user %} no-sidebar{% endif %}">
 {% if current_user %}<aside class="sidebar" id="sidebar"><div class="brand"><span class="brand-mark">M</span><span>MoneyWise</span></div><nav>
 <a href="{{ url_for('dashboard') }}">⌂ Dashboard</a><a href="{{ url_for('wallet') }}">▣ Wallet</a><a href="{{ url_for('expenses') }}">↘ Expenses</a><a href="{{ url_for('savings') }}">◇ Savings</a><a href="{{ url_for('goals') }}">◎ Goals</a><a href="{{ url_for('skills') }}">✦ Skills</a><a href="{{ url_for('learning') }}">▤ Learning</a><a href="{{ url_for('quiz') }}">✓ Quiz</a><a href="{{ url_for('chatbot') }}">◌ MoneyWise AI</a><a href="{{ url_for('ai_insights') }}">✦ AI Insights</a>
 </nav><div class="side-footer"><small>Signed in as {{ current_user["email"] }}</small><a href="{{ url_for('switch_account') }}">Switch account</a><a href="{{ url_for('logout') }}">Log out</a></div></aside>{% endif %}
