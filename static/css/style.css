@@ -7,3 +7,13 @@
 
 /* Desktop page-width fix: keep secondary pages as wide as the dashboard. */
 @media(min-width:1001px){.page{width:100%;max-width:none;margin:0;}.chat-wrap{width:100%;max-width:none;}.page>.card,.page>.grid,.page>.goal-grid,.page>.skill-grid,.page>.source-grid,.page>form{width:100%;}}
+
+/* Full desktop workspace: prevent individual pages from looking phone-sized. */
+@media(min-width:1001px){
+  .main{margin-left:250px!important;width:calc(100% - 250px)!important;min-width:0!important;}
+  .page{width:100%!important;max-width:none!important;margin:0!important;padding-left:5%!important;padding-right:5%!important;}
+  .auth-wrap{width:100%!important;max-width:none!important;margin:0!important;}
+  .auth-wrap>.card{width:100%!important;}
+  .chat-wrap{width:100%!important;max-width:none!important;margin:0!important;}
+  .hero{width:100%!important;}
+}
