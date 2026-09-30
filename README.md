@@ -29,10 +29,11 @@ No Node.js, React, Express, or separate JavaScript backend is required.
 - 9 financial skill modules
 - Curated external learning sources
 - Project-based learning
-- Interactive money-literacy quiz
+- Scenario-based MoneyWise AI decision questionnaire
 - Money literacy resources
-- Offline MoneyWise fallback chatbot
+- MoneyWise AI decision coach with financial scenarios
 - Explainable, rule-based AI financial insights
+- What-If financial scenario simulator
 - Spending-pattern analysis from the signed-in user's records
 - Savings-rate and expense-ratio analysis
 - Saving-goal progress and timeline estimates
@@ -71,7 +72,7 @@ Change `SECRET_KEY` in `app.py` before deploying anywhere public. For production
 
 ## Data model
 
-Each account's transactions, savings, goals, learning progress, and quiz results are linked to its own user ID. SQLite is local to the installation.
+Each account's transactions, savings, goals, and learning progress are linked to its own user ID. SQLite is local to the installation.
 
 ## Curated sources
 
@@ -79,7 +80,7 @@ The starter dataset contains links to established financial education providers.
 
 ## AI system
 
-MoneyWise uses a local, explainable rule-based AI layer rather than an external AI API. The AI combines the signed-in user's income, expenses, savings, spending categories, and saving goals to identify patterns and produce readable insights. The chatbot can also trigger the same analysis when the user asks about patterns or financial analysis.
+MoneyWise uses a local, explainable rule-based AI layer rather than an external AI API. The AI combines the signed-in user's income, expenses, savings, spending categories, and saving goals to identify patterns and produce readable insights. MoneyWise AI also presents realistic financial situations and analyzes the user's decisions using transparent rules. The What-If system simulates hypothetical changes such as saving more or reducing expenses and explains the projected effect without changing real records.
 
 The AI layer is intentionally additive: it does not modify transactions, savings, goals, login data, or other existing workflows. The rule-based analysis should be described as explainable/rule-based AI.
 
