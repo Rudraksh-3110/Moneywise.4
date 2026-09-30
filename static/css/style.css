@@ -4,3 +4,6 @@
 .sidebar{display:flex!important;visibility:visible!important;transform:none!important;left:0!important;z-index:1000!important;}
 .main{display:block!important;position:relative!important;min-height:100vh!important;margin-left:250px!important;width:auto!important;max-width:none!important;}
 @media(max-width:680px){.sidebar{width:250px!important;}.main{margin-left:250px!important;width:auto!important;min-width:calc(100vw - 250px)!important;}}
+
+/* Desktop page-width fix: keep secondary pages as wide as the dashboard. */
+@media(min-width:1001px){.page{width:100%;max-width:none;margin:0;}.chat-wrap{width:100%;max-width:none;}.page>.card,.page>.grid,.page>.goal-grid,.page>.skill-grid,.page>.source-grid,.page>form{width:100%;}}
