@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}MoneyWise{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=mobile-menu-20260930-1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=what-if-ai-20260930-1">
 </head>
 <body><div class="app-shell{% if not current_user %} no-sidebar{% endif %}">
 {% if current_user %}<aside class="sidebar" id="sidebar"><div class="brand"><span class="brand-mark">M</span><span>MoneyWise</span></div><nav>
-<a href="{{ url_for('dashboard') }}">⌂ Dashboard</a><a href="{{ url_for('wallet') }}">▣ Wallet</a><a href="{{ url_for('expenses') }}">↘ Expenses</a><a href="{{ url_for('savings') }}">◇ Savings</a><a href="{{ url_for('goals') }}">◎ Goals</a><a href="{{ url_for('skills') }}">✦ Skills</a><a href="{{ url_for('learning') }}">▤ Learning</a><a href="{{ url_for('quiz') }}">✓ Quiz</a><a href="{{ url_for('chatbot') }}">◌ MoneyWise AI</a><a href="{{ url_for('ai_insights') }}">✦ AI Insights</a>
+<a href="{{ url_for('dashboard') }}">⌂ Dashboard</a><a href="{{ url_for('wallet') }}">▣ Wallet</a><a href="{{ url_for('expenses') }}">↘ Expenses</a><a href="{{ url_for('savings') }}">◇ Savings</a><a href="{{ url_for('goals') }}">◎ Goals</a><a href="{{ url_for('skills') }}">✦ Skills</a><a href="{{ url_for('learning') }}">▤ Learning</a><a href="{{ url_for('quiz') }}">✓ Quiz</a><a href="{{ url_for('chatbot') }}">◌ MoneyWise AI</a><a href="{{ url_for('ai_insights') }}">✦ AI Insights</a><a href="{{ url_for('what_if') }}">◈ What-If AI</a>
 </nav><div class="side-footer"><small>Signed in as {{ current_user["email"] }}</small><a href="{{ url_for('switch_account') }}">Switch account</a><a href="{{ url_for('logout') }}">Log out</a></div></aside><div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()" aria-hidden="true"></div>{% endif %}
 <main class="main"><header class="topbar">{% if current_user %}<button class="menu-btn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false" onclick="toggleSidebar()">☰</button>{% endif %}<div><div class="eyebrow">PERSONAL FINANCE EDUCATION</div><h1>{% block heading %}MoneyWise{% endblock %}</h1></div>{% if current_user %}<div class="user-pill">{{ current_user["name"] }}</div>{% endif %}</header>
 {% with messages=get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category,msg in messages %}<div class="flash {{ category }}">{{ msg }}</div>{% endfor %}</div>{% endif %}{% endwith %}
