@@ -70,6 +70,30 @@ CREATE TABLE IF NOT EXISTS user_skill_progress(
  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
  FOREIGN KEY(skill_id) REFERENCES skills(id) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS learning_topics(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ title TEXT NOT NULL,
+ description TEXT NOT NULL,
+ level TEXT NOT NULL,
+ icon TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS learning_content_sources(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ topic_id INTEGER NOT NULL,
+ title TEXT NOT NULL,
+ provider TEXT NOT NULL,
+ url TEXT NOT NULL,
+ description TEXT NOT NULL,
+ FOREIGN KEY(topic_id) REFERENCES learning_topics(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS learning_projects(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ topic_id INTEGER NOT NULL,
+ title TEXT NOT NULL,
+ description TEXT NOT NULL,
+ steps TEXT NOT NULL,
+ FOREIGN KEY(topic_id) REFERENCES learning_topics(id) ON DELETE CASCADE
+);
 CREATE TABLE IF NOT EXISTS quiz_results(
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  user_id INTEGER NOT NULL,
@@ -105,7 +129,64 @@ def init_db():
 
 def seed_db():
     db = get_db()
+
+    # Skills are career / earn-and-learn skills and are independent from
+    # the financial-literacy Learning section.
     skills = [
+        ("Python Programming","Learn Python fundamentals and build useful small programs, scripts and automation tools.","Beginner","<>"),
+        ("Graphic Design","Learn visual design, layouts, branding and digital graphics that can become freelance work.","Beginner","✦"),
+        ("Video Editing","Learn to edit short videos, reels and presentations for creators, businesses and school projects.","Beginner","▶"),
+        ("Web Development","Learn HTML, CSS, JavaScript and the basics of building websites and web applications.","Intermediate","</>"),
+        ("UI/UX Design","Learn how to design clear interfaces, user flows, wireframes and prototypes.","Intermediate","▣"),
+        ("Content Creation","Learn writing, storytelling, presentation and social-media content skills.","Beginner","✎"),
+        ("Digital Marketing","Learn social media, search, basic analytics and online promotion for projects and small businesses.","Intermediate","↗"),
+        ("Data Analysis","Learn spreadsheets, data cleaning, charts and basic analysis to turn data into useful insights.","Intermediate","▥"),
+        ("AI & Automation","Learn practical AI concepts, prompt design and simple automation workflows for modern work.","Intermediate","⌁")
+    ]
+
+    existing = db.execute("SELECT title FROM skills ORDER BY id").fetchall()
+    titles = [r["title"] for r in existing]
+    target_titles = [s[0] for s in skills]
+
+    if titles != target_titles:
+        db.execute("DELETE FROM learning_sources")
+        db.execute("DELETE FROM projects")
+        db.execute("DELETE FROM user_skill_progress")
+        db.execute("DELETE FROM skills")
+        db.commit()
+
+    if db.execute("SELECT COUNT(*) c FROM skills").fetchone()["c"] == 0:
+        db.executemany("INSERT INTO skills(title,description,level,icon) VALUES(?,?,?,?)", skills)
+
+    career_sources = [
+        (1,"Python Tutorial","Python.org","https://docs.python.org/3/tutorial/","Official Python tutorial for learning the language."),
+        (2,"Design School","Canva","https://www.canva.com/designschool/","Design lessons and practical visual-design resources."),
+        (3,"Video editing learning","Adobe","https://helpx.adobe.com/premiere-pro/tutorials.html","Tutorials for learning professional video-editing concepts."),
+        (4,"Learn Web Development","freeCodeCamp","https://www.freecodecamp.org/learn/","Free interactive courses for web development."),
+        (5,"Figma Learn","Figma","https://help.figma.com/hc/en-us/categories/360002051613-Learn-design","Resources for learning interface design and prototyping."),
+        (6,"Content Marketing Education","HubSpot Academy","https://academy.hubspot.com/","Free courses covering content and digital communication."),
+        (7,"Digital Marketing Courses","Google Skillshop","https://skillshop.withgoogle.com/","Training for digital marketing and Google tools."),
+        (8,"Learn Data Skills","Kaggle","https://www.kaggle.com/learn","Practical lessons for data analysis and related skills."),
+        (9,"AI learning resources","Microsoft Learn","https://learn.microsoft.com/training/","Learning paths covering AI, automation and modern technology.")
+    ]
+    career_projects = [
+        (1,"Build a Python Utility","Create a small Python program that solves a real student problem.","Choose a problem|Plan the logic|Build the program|Test it|Improve the interface"),
+        (2,"Design a Brand Kit","Create a simple visual identity for a fictional student business.","Choose a business idea|Create a logo concept|Choose typography|Create social graphics|Present the brand kit"),
+        (3,"Edit a Short Video","Create a polished 30–60 second video for a school project or fictional client.","Choose footage|Create a storyboard|Edit clips|Add text and audio|Export and review"),
+        (4,"Build a Portfolio Website","Create a responsive personal portfolio website.","Plan sections|Write HTML|Style with CSS|Add JavaScript|Publish and test"),
+        (5,"Design a Mobile App","Create a clickable prototype for a useful student app.","Identify the user|Sketch screens|Create wireframes|Build a prototype|Test the flow"),
+        (6,"Create a Content Pack","Create a week of useful content for a fictional creator or small business.","Choose a niche|Plan topics|Write posts|Create visuals|Prepare a posting schedule"),
+        (7,"Create a Marketing Campaign","Plan a simple digital campaign for a fictional student business.","Define audience|Set a goal|Create content ideas|Choose channels|Measure results"),
+        (8,"Analyze a Dataset","Turn a small public dataset into useful charts and conclusions.","Find data|Clean it|Calculate key values|Create charts|Explain the findings"),
+        (9,"Build an AI Workflow","Design a simple workflow that uses AI responsibly to reduce repetitive work.","Choose a task|Define inputs|Create prompts|Design the workflow|Test and document it")
+    ]
+    db.execute("DELETE FROM learning_sources")
+    db.execute("DELETE FROM projects")
+    db.executemany("INSERT INTO learning_sources(skill_id,title,provider,url,description) VALUES(?,?,?,?,?)", career_sources)
+    db.executemany("INSERT INTO projects(skill_id,title,description,steps) VALUES(?,?,?,?)", career_projects)
+
+    # Financial literacy belongs to Learning, not Skills.
+    topics = [
         ("Budgeting","Build a realistic plan for where your money goes.","Beginner","◫"),
         ("Saving","Learn how to create saving habits and emergency buffers.","Beginner","◇"),
         ("Needs vs Wants","Make thoughtful spending decisions using simple frameworks.","Beginner","◆"),
@@ -116,21 +197,10 @@ def seed_db():
         ("Financial Safety","Recognize scams, protect accounts and practice digital safety.","Beginner","✓"),
         ("Financial Planning","Turn goals into a practical longer-term money plan.","Intermediate","⌁")
     ]
-    existing = db.execute("SELECT title FROM skills ORDER BY id").fetchall()
-    titles = [r["title"] for r in existing]
-    target_titles = [s[0] for s in skills]
-
-    # Restore the original financial-literacy learning catalog if the
-    # database currently contains the newer learn-and-earn catalog.
-    if titles != target_titles:
-        db.execute("DELETE FROM learning_sources")
-        db.execute("DELETE FROM projects")
-        db.execute("DELETE FROM user_skill_progress")
-        db.execute("DELETE FROM skills")
-        db.commit()
-
-    if db.execute("SELECT COUNT(*) c FROM skills").fetchone()["c"] == 0:
-        db.executemany("INSERT INTO skills(title,description,level,icon) VALUES(?,?,?,?)", skills)
+    db.execute("DELETE FROM learning_content_sources")
+    db.execute("DELETE FROM learning_projects")
+    db.execute("DELETE FROM learning_topics")
+    db.executemany("INSERT INTO learning_topics(title,description,level,icon) VALUES(?,?,?,?)", topics)
     sources = [
         (1,"Budgeting basics","Consumer Financial Protection Bureau","https://www.consumerfinance.gov/consumer-tools/budgeting/","Practical budgeting education and tools."),
         (2,"Saving money","Consumer Financial Protection Bureau","https://www.consumerfinance.gov/consumer-tools/saving/","Educational guidance about saving and goals."),
@@ -142,7 +212,6 @@ def seed_db():
         (8,"Online safety","FTC Consumer Advice","https://consumer.ftc.gov/","Consumer and scam-awareness resources."),
         (9,"Financial education","Khan Academy","https://www.khanacademy.org/college-careers-more/personal-finance","Free personal-finance learning materials.")
     ]
-    db.executemany("INSERT INTO learning_sources(skill_id,title,provider,url,description) VALUES(?,?,?,?,?)", sources)
     projects = [
         (1,"Build a 30-day budget","Create a month-long budget from your real income and typical expenses.","List income|List fixed expenses|Estimate flexible expenses|Set a savings target|Review at month end"),
         (2,"Savings challenge","Create a small, achievable savings target and track it for four weeks.","Choose a goal|Set weekly targets|Log contributions|Review progress"),
@@ -154,5 +223,6 @@ def seed_db():
         (8,"Scam spotting drill","Collect examples of common scam warning signs from trusted sources.","Read safety guidance|List red flags|Create a verification checklist|Teach someone else"),
         (9,"One-year money plan","Create a one-page plan for savings, spending and learning goals.","Choose three goals|Assign target dates|Estimate monthly actions|Review quarterly")
     ]
-    db.executemany("INSERT INTO projects(skill_id,title,description,steps) VALUES(?,?,?,?)", projects)
+    db.executemany("INSERT INTO learning_content_sources(topic_id,title,provider,url,description) VALUES(?,?,?,?,?)", sources)
+    db.executemany("INSERT INTO learning_projects(topic_id,title,description,steps) VALUES(?,?,?,?)", projects)
     db.commit()
