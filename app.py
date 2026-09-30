@@ -6,7 +6,6 @@ from datetime import datetime
 from backend.database import get_db, init_db, seed_db
 from backend.recommendations import get_recommendations
 from backend.ai_insights import get_ai_insights
-from backend.generative_ai import generate_moneywise_response
 from backend.chatbot import answer
 from backend.quiz import get_quiz, grade_quiz
 
@@ -261,21 +260,6 @@ def chatbot():
 @login_required
 def ai_insights():
     return render_template("ai_insights.html", insights=get_ai_insights(session["user_id"]))
-
-@app.route("/generative-ai", methods=["GET", "POST"])
-@login_required
-def generative_ai():
-    uid = session["user_id"]
-    history = session.get("generative_ai_history", [])
-    if request.method == "POST":
-        message = request.form.get("message", "").strip()
-        if message:
-            data = financial_data(uid)
-            reply = generate_moneywise_response(message, data)
-            history.append({"user": message, "bot": reply})
-            session["generative_ai_history"] = history[-12:]
-            session.modified = True
-    return render_template("generative_ai.html", history=history)
 
 @app.route("/api/summary")
 @login_required
