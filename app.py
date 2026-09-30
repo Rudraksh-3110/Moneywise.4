@@ -217,7 +217,7 @@ def add_goal_progress(gid):
 @login_required
 def learning():
     db = get_db()
-    skills = db.execute("SELECT * FROM skills ORDER BY id").fetchall()
+    skills = db.execute("""SELECT skills.*, learning_sources.url AS learning_url, learning_sources.title AS learning_title\n                              FROM skills LEFT JOIN learning_sources ON learning_sources.skill_id=skills.id\n                              ORDER BY skills.id""").fetchall()
     sources = db.execute("SELECT * FROM learning_sources ORDER BY skill_id, title").fetchall()
     projects = db.execute("SELECT * FROM projects ORDER BY skill_id, id").fetchall()
     return render_template("learning.html", skills=skills, sources=sources, projects=projects)
