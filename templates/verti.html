@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Verti — MoneyWise{% endblock %}
-{% block heading %}Verti Hypothetical Scenarios{% endblock %}
+{% block title %}What-If — MoneyWise{% endblock %}
+{% block heading %}What-If Hypothetical Scenarios{% endblock %}
 {% block content %}
 <div class="ai-hero">
   <div>
     <span class="badge">RULE-BASED AI</span>
     <h2>What if...?</h2>
-    <p>Verti gives you hypothetical money situations and asks what you would do. Choose a response, then Verti explains the financial thinking behind your decision.</p>
+    <p>What-If gives you hypothetical money situations and asks what you would do. Choose a response, then What-If explains the financial thinking behind your decision.</p>
   </div>
 </div>
 <form method="post" class="scenario-form">
@@ -25,8 +25,8 @@
 </form>
 {% if result %}
 <div class="card scenario-result">
-  <span class="badge">VERTI ANALYSIS</span>
-  <h2>What Verti noticed</h2>
+  <span class="badge">WHAT-IF ANALYSIS</span>
+  <h2>What What-If noticed</h2>
   <div class="grid three">
     <div class="stat-card"><span>Choices aligned with recommended principles</span><strong>{{ result.score }}/{{ result.total }}</strong></div>
     <div class="stat-card"><span>System approach</span><strong>Explainable</strong></div>
@@ -43,11 +43,11 @@
 </div>
 {% endif %}
 <div class="card">
-  <h2>How Verti fits the AI theme</h2>
+  <h2>How What-If fits the AI theme</h2>
   <div class="grid three">
-    <div class="mini-feature"><strong>1. Ask</strong><p>Verti presents a hypothetical financial situation.</p></div>
+    <div class="mini-feature"><strong>1. Ask</strong><p>What-If presents a hypothetical financial situation.</p></div>
     <div class="mini-feature"><strong>2. Evaluate</strong><p>A transparent rule-based engine evaluates the selected response.</p></div>
-    <div class="mini-feature"><strong>3. Explain</strong><p>Verti explains the financial principle behind the result.</p></div>
+    <div class="mini-feature"><strong>3. Explain</strong><p>What-If explains the financial principle behind the result.</p></div>
   </div>
 </div>
 {% endblock %}
