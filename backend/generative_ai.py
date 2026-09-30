@@ -73,7 +73,8 @@ User question:
     payload = json.dumps({
         "model": DEFAULT_MODEL,
         "input": prompt,
-        "max_output_tokens": 500
+        "max_output_tokens": 500,
+        "store": false
     }).encode("utf-8")
 
     req = request.Request(
