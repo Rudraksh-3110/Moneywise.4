@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Verti — MoneyWise{% endblock %}
+{% block heading %}Verti Hypothetical Scenarios{% endblock %}
+{% block content %}
+<div class="ai-hero">
+  <div>
+    <span class="badge">RULE-BASED AI</span>
+    <h2>What if...?</h2>
+    <p>Verti gives you hypothetical money situations and asks what you would do. Choose a response, then Verti explains the financial thinking behind your decision.</p>
+  </div>
+</div>
+<form method="post" class="scenario-form">
+{% for scenario in scenarios %}
+<div class="card scenario-card">
+  <div class="scenario-number">HYPOTHETICAL SITUATION {{ loop.index }}</div>
+  <h2>{{ scenario.question }}</h2>
+  <div class="scenario-options">
+  {% for value,label in scenario.options %}
+    <label class="scenario-option"><input type="radio" name="{{ scenario.id }}" value="{{ value }}" required><span>{{ label }}</span></label>
+  {% endfor %}
+  </div>
+</div>
+{% endfor %}
+<button class="btn primary scenario-submit" type="submit">Analyze My Choices</button>
+</form>
+{% if result %}
+<div class="card scenario-result">
+  <span class="badge">VERTI ANALYSIS</span>
+  <h2>What Verti noticed</h2>
+  <div class="grid three">
+    <div class="stat-card"><span>Choices aligned with recommended principles</span><strong>{{ result.score }}/{{ result.total }}</strong></div>
+    <div class="stat-card"><span>System approach</span><strong>Explainable</strong></div>
+    <div class="stat-card"><span>System type</span><strong>Rule-based</strong></div>
+  </div>
+  <div class="ai-insight pattern"><strong>✦ Decision summary</strong><p>{{ result.summary }}</p></div>
+  {% for item in result.results %}
+  <div class="ai-insight {% if item.correct %}positive{% else %}attention{% endif %}">
+    <strong>{{ loop.index }}. {{ "Strong decision" if item.correct else "Think about this choice" }}</strong>
+    <p><strong>Your response:</strong> {{ item.selected }}</p>
+    <p>{{ item.reason }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+<div class="card">
+  <h2>How Verti fits the AI theme</h2>
+  <div class="grid three">
+    <div class="mini-feature"><strong>1. Ask</strong><p>Verti presents a hypothetical financial situation.</p></div>
+    <div class="mini-feature"><strong>2. Evaluate</strong><p>A transparent rule-based engine evaluates the selected response.</p></div>
+    <div class="mini-feature"><strong>3. Explain</strong><p>Verti explains the financial principle behind the result.</p></div>
+  </div>
+</div>
+{% endblock %}
