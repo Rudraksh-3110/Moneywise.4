@@ -99,6 +99,7 @@ MoneyWise/
 │   ├── recommendations.py
 │   ├── ai_insights.py
 │   ├── chatbot.py
+│   ├── generative_ai.py
 │   └── quiz.py
 ├── database/
 │   └── moneywise.db   # created automatically
@@ -109,3 +110,15 @@ MoneyWise/
 │   └── svg/
 └── templates/
 ```
+
+
+## Optional Generative AI setup
+
+The Generative AI page uses the OpenAI Responses API through the Python backend. The API key is never placed in frontend code.
+
+For Render, add these environment variables:
+
+- `OPENAI_API_KEY` — your API key
+- `OPENAI_MODEL` — optional; defaults to `gpt-5.6-luna`
+
+If `OPENAI_API_KEY` is not configured, the Generative AI page remains usable and shows the built-in fallback instead of crashing. API/network errors are also handled safely.
