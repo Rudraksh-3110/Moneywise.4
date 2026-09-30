@@ -11,7 +11,7 @@ from backend.verti import get_scenarios, evaluate_scenarios
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or os.environ.get("MONEYWISE_SECRET_KEY") or "dev-only-change-this-secret"
-app.config["DATABASE"] = "database/moneywise.db"
+app.config["DATABASE"] = os.environ.get("DATABASE_PATH", "database/moneywise.db")
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = os.environ.get("RENDER") == "true"
