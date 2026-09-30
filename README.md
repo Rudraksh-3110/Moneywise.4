@@ -32,9 +32,7 @@ No Node.js, React, Express, or separate JavaScript backend is required.
 - Interactive money-literacy quiz
 - Money literacy resources
 - Offline MoneyWise fallback chatbot
-- Optional Generative AI financial-learning assistant
 - Explainable, rule-based AI financial insights
-- Optional Generative AI with safe fallback
 - Spending-pattern analysis from the signed-in user's records
 - Savings-rate and expense-ratio analysis
 - Saving-goal progress and timeline estimates
@@ -83,7 +81,7 @@ The starter dataset contains links to established financial education providers.
 
 MoneyWise uses a local, explainable rule-based AI layer rather than an external AI API. The AI combines the signed-in user's income, expenses, savings, spending categories, and saving goals to identify patterns and produce readable insights. The chatbot can also trigger the same analysis when the user asks about patterns or financial analysis.
 
-The AI layer is intentionally additive: it does not modify transactions, savings, goals, login data, or other existing workflows. The Generative AI feature is also isolated behind its own route and environment variable. If the API key is missing or the provider is unavailable, MoneyWise returns a safe fallback message and the normal finance features remain independent. The rule-based analysis should be described as explainable/rule-based AI; the optional external assistant is the project's Generative AI component.
+The AI layer is intentionally additive: it does not modify transactions, savings, goals, login data, or other existing workflows. The rule-based analysis should be described as explainable/rule-based AI.
 
 It is an educational tool and not a substitute for a qualified financial professional.
 
@@ -99,7 +97,6 @@ MoneyWise/
 │   ├── recommendations.py
 │   ├── ai_insights.py
 │   ├── chatbot.py
-│   ├── generative_ai.py
 │   └── quiz.py
 ├── database/
 │   └── moneywise.db   # created automatically
@@ -112,13 +109,3 @@ MoneyWise/
 ```
 
 
-## Optional Generative AI setup
-
-The Generative AI page uses the OpenAI Responses API through the Python backend. The API key is never placed in frontend code.
-
-For Render, add these environment variables:
-
-- `OPENAI_API_KEY` — your API key
-- `OPENAI_MODEL` — optional; defaults to `gpt-5.6-luna`
-
-If `OPENAI_API_KEY` is not configured, the Generative AI page remains usable and shows the built-in fallback instead of crashing. API/network errors are also handled safely.
