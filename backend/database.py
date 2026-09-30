@@ -202,15 +202,15 @@ def seed_db():
     db.execute("DELETE FROM learning_topics")
     db.executemany("INSERT INTO learning_topics(title,description,level,icon) VALUES(?,?,?,?)", topics)
     sources = [
-        (1,"Budgeting basics","Consumer Financial Protection Bureau","https://www.consumerfinance.gov/consumer-tools/budgeting/","Practical budgeting education and tools."),
-        (2,"Saving money","Consumer Financial Protection Bureau","https://www.consumerfinance.gov/consumer-tools/saving/","Educational guidance about saving and goals."),
-        (3,"Needs vs wants","Consumer Financial Protection Bureau","https://www.consumerfinance.gov/consumer-tools/","Explore consumer money-management resources."),
-        (4,"Money and banking","FDIC Money Smart","https://www.fdic.gov/resources/consumers/money-smart/","Financial education resources from the FDIC."),
-        (5,"Investor education","Investor.gov","https://www.investor.gov/","SEC investor education and foundational concepts."),
-        (6,"Credit and loans","Consumer Financial Protection Bureau","https://www.consumerfinance.gov/consumer-tools/credit-reports-and-scores/","Learn about credit reports and scores."),
-        (7,"Tax education","IRS Tax Information","https://www.irs.gov/individuals","Official U.S. tax information; use local tax authority guidance for your jurisdiction."),
-        (8,"Online safety","FTC Consumer Advice","https://consumer.ftc.gov/","Consumer and scam-awareness resources."),
-        (9,"Financial education","Khan Academy","https://www.khanacademy.org/college-careers-more/personal-finance","Free personal-finance learning materials.")
+        (1,"Budgeting basics","Reserve Bank of India (RBI)","https://www.rbi.org.in/FinancialEducation/content/I%20Can%20Do_RBI.pdf","RBI financial education resource covering budgeting and practical money management."),
+        (2,"Budgeting, Saving and Responsible Borrowing","Reserve Bank of India (RBI)","https://www.rbi.org.in/commonman/images/FAME%20Booklet%20second%20edition/FAME%20Booklet%20English/FAME30072020.pdf","RBI financial awareness material covering saving, budgeting and responsible borrowing."),
+        (3,"Financial Literacy for School Children","Reserve Bank of India (RBI)","https://www.rbi.org.in/commonman/English/content/01SCHOOL20042018.pdf","RBI educational material designed to introduce school students to financial concepts."),
+        (4,"Financial Literacy for School Children","Reserve Bank of India (RBI)","https://www.rbi.org.in/commonman/English/content/01SCHOOL20042018.pdf","RBI material covering banking basics, accounts and common banking services."),
+        (5,"Financial Education Booklet","SEBI Investor Education","https://investor.sebi.gov.in/pdf/downloadable-documents/Financial%20Education%20Booklet%20-%20English.pdf","SEBI educational material covering saving, investing, risk, debt and financial concepts."),
+        (6,"Financial Education Booklet","SEBI Investor Education","https://investor.sebi.gov.in/pdf/downloadable-documents/Financial%20Education%20Booklet%20-%20English.pdf","SEBI educational material explaining debt and related financial concepts."),
+        (7,"Learn with Us — Individual Taxpayer","Income Tax Department, Government of India","https://www.incometax.gov.in/iec/foportal/help/all-topics/tax-payer/individual","Official Indian income-tax guidance for individual taxpayers."),
+        (8,"Cyber Safety and Financial Fraud","Indian Cybercrime Coordination Centre (I4C), Ministry of Home Affairs","https://www.cybercrime.gov.in/","Government of India cyber-safety resources, including financial-fraud awareness and reporting."),
+        (9,"Financial Education Booklet","SEBI Investor Education","https://investor.sebi.gov.in/pdf/downloadable-documents/Financial%20Education%20Booklet%20-%20English.pdf","SEBI financial-education material covering financial planning, saving, investing and related concepts.")
     ]
     projects = [
         (1,"Build a 30-day budget","Create a month-long budget from your real income and typical expenses.","List income|List fixed expenses|Estimate flexible expenses|Set a savings target|Review at month end"),
