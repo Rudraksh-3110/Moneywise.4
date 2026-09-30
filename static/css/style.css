@@ -71,3 +71,9 @@
   .menu-btn{display:none!important;}
   .sidebar-backdrop{display:none!important;}
 }
+
+/* What-If AI page */
+.what-if-hero{margin-bottom:18px;}
+.what-if-grid{align-items:start;}
+.what-if-result{margin-top:18px;}
+.what-if-action{font-size:18px;color:var(--muted);}
