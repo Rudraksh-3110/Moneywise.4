@@ -32,7 +32,9 @@ No Node.js, React, Express, or separate JavaScript backend is required.
 - Interactive money-literacy quiz
 - Money literacy resources
 - Offline MoneyWise fallback chatbot
+- Optional Generative AI financial-learning assistant
 - Explainable, rule-based AI financial insights
+- Optional Generative AI with safe fallback
 - Spending-pattern analysis from the signed-in user's records
 - Savings-rate and expense-ratio analysis
 - Saving-goal progress and timeline estimates
@@ -81,7 +83,7 @@ The starter dataset contains links to established financial education providers.
 
 MoneyWise uses a local, explainable rule-based AI layer rather than an external AI API. The AI combines the signed-in user's income, expenses, savings, spending categories, and saving goals to identify patterns and produce readable insights. The chatbot can also trigger the same analysis when the user asks about patterns or financial analysis.
 
-The AI layer is intentionally additive: it does not modify transactions, savings, goals, login data, or other existing workflows. If the AI layer is unavailable, the normal finance features remain independent. Because the analysis is rule-based, it should be described as explainable/rule-based AI rather than machine learning or generative AI.
+The AI layer is intentionally additive: it does not modify transactions, savings, goals, login data, or other existing workflows. The Generative AI feature is also isolated behind its own route and environment variable. If the API key is missing or the provider is unavailable, MoneyWise returns a safe fallback message and the normal finance features remain independent. The rule-based analysis should be described as explainable/rule-based AI; the optional external assistant is the project's Generative AI component.
 
 It is an educational tool and not a substitute for a qualified financial professional.
 
