@@ -7,8 +7,7 @@ from backend.database import get_db, init_db, seed_db
 from backend.recommendations import get_recommendations
 from backend.ai_insights import get_ai_insights
 from backend.what_if import analyze_what_if
-from backend.chatbot import answer
-from backend.quiz import get_quiz, grade_quiz
+from backend.chatbot import get_scenarios, evaluate_scenarios
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or os.environ.get("MONEYWISE_SECRET_KEY") or "dev-only-change-this-secret"
@@ -243,34 +242,16 @@ def complete_skill(sid):
     db.commit()
     return redirect(url_for("skills"))
 
-@app.route("/quiz")
-@login_required
-def quiz():
-    return render_template("quiz.html", questions=get_quiz())
-
-@app.route("/quiz/submit", methods=["POST"])
-@login_required
-def quiz_submit():
-    answers = {int(k): v for k,v in request.form.items() if k.isdigit()}
-    result = grade_quiz(answers)
-    db = get_db()
-    db.execute("INSERT INTO quiz_results(user_id,score,total,created_at) VALUES(?,?,?,?)",
-               (session["user_id"],result["score"],result["total"],datetime.now().isoformat(timespec="seconds")))
-    db.commit()
-    return render_template("quiz_result.html", result=result)
-
 @app.route("/chatbot", methods=["GET","POST"])
 @login_required
 def chatbot():
-    history = session.get("chat_history", [])
+    result = None
     if request.method == "POST":
-        msg = request.form.get("message","").strip()
-        if msg:
-            reply = answer(msg, session["user_id"])
-            history.append({"user":msg, "bot":reply})
-            session["chat_history"] = history[-12:]
-            session.modified = True
-    return render_template("chatbot.html", history=history)
+        answers = {"user_id": session["user_id"]}
+        for scenario in get_scenarios():
+            answers[scenario["id"]] = request.form.get(scenario["id"])
+        result = evaluate_scenarios(answers)
+    return render_template("chatbot.html", scenarios=get_scenarios(), result=result)
 
 @app.route("/ai-insights")
 @login_required
