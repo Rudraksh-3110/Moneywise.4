@@ -7,7 +7,8 @@ from backend.database import get_db, init_db, seed_db
 from backend.recommendations import get_recommendations
 from backend.ai_insights import get_ai_insights
 from backend.what_if import analyze_what_if
-from backend.chatbot import get_scenarios, evaluate_scenarios
+from backend.chatbot import answer
+from backend.verti import get_scenarios, evaluate_scenarios
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or os.environ.get("MONEYWISE_SECRET_KEY") or "dev-only-change-this-secret"
@@ -245,13 +246,26 @@ def complete_skill(sid):
 @app.route("/chatbot", methods=["GET","POST"])
 @login_required
 def chatbot():
+    history = session.get("chat_history", [])
+    if request.method == "POST":
+        msg = request.form.get("message", "").strip()
+        if msg:
+            reply = answer(msg, session["user_id"])
+            history.append({"user": msg, "bot": reply})
+            session["chat_history"] = history[-12:]
+            session.modified = True
+    return render_template("chatbot.html", history=history)
+
+@app.route("/verti", methods=["GET","POST"])
+@login_required
+def verti():
     result = None
     if request.method == "POST":
         answers = {"user_id": session["user_id"]}
         for scenario in get_scenarios():
             answers[scenario["id"]] = request.form.get(scenario["id"])
         result = evaluate_scenarios(answers)
-    return render_template("chatbot.html", scenarios=get_scenarios(), result=result)
+    return render_template("verti.html", scenarios=get_scenarios(), result=result)
 
 @app.route("/ai-insights")
 @login_required
