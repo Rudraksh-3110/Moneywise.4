@@ -17,3 +17,8 @@
   .chat-wrap{width:100%!important;max-width:none!important;margin:0!important;}
   .hero{width:100%!important;}
 }
+
+/* No-sidebar pages (landing, login, register) use the full browser width. */
+.no-sidebar .main{margin-left:0!important;width:100%!important;min-width:0!important;}
+.no-sidebar .page{width:100%!important;max-width:none!important;margin:0!important;}
+.no-sidebar .topbar{width:100%!important;}
