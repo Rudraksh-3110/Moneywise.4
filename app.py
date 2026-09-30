@@ -25,6 +25,21 @@ def login_required(fn):
     def wrapper(*args, **kwargs):
         if "user_id" not in session:
             return redirect(url_for("login"))
+
+        # A Render restart/deploy can recreate a local SQLite database while
+        # an old browser session cookie is still present. Do not treat that
+        # stale session as a valid login or render a dashboard without a user.
+        db = get_db()
+        user = db.execute(
+            "SELECT id FROM users WHERE id=?",
+            (session["user_id"],)
+        ).fetchone()
+
+        if user is None:
+            session.clear()
+            flash("Your session has expired. Please log in again.", "error")
+            return redirect(url_for("login"))
+
         return fn(*args, **kwargs)
     return wrapper
 
