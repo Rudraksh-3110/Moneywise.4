@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}What-If AI — MoneyWise{% endblock %}
+{% block heading %}What-If AI{% endblock %}
+{% block content %}
+<div class="ai-hero what-if-hero">
+  <div>
+    <span class="badge">EXPLAINABLE RULE-BASED AI</span>
+    <h2>See how one money decision could change your future.</h2>
+    <p>MoneyWise uses your recorded income and expenses to calculate hypothetical scenarios. It does not change your real financial records.</p>
+  </div>
+</div>
+
+<div class="grid two what-if-grid">
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <h2>Build a scenario</h2>
+        <p class="muted">Change one number and let MoneyWise analyze the result.</p>
+      </div>
+    </div>
+    <form method="post" class="form-card">
+      <label>What would you like to change?
+        <select name="mode">
+          <option value="save_more">Save more each month</option>
+          <option value="reduce_expenses">Reduce expenses each month</option>
+        </select>
+      </label>
+      <label>Monthly change (₹)
+        <input type="number" name="monthly_change" min="0" step="100" placeholder="1000" required>
+      </label>
+      <button class="btn primary" type="submit">Analyze Scenario</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Your recorded baseline</h2>
+    <div class="summary-list">
+      <div><span>Income</span><strong>₹{{ "%.2f"|format(data.income) }}</strong></div>
+      <div><span>Expenses</span><strong>₹{{ "%.2f"|format(data.expenses) }}</strong></div>
+      <div><span>Saved</span><strong>₹{{ "%.2f"|format(data.saved) }}</strong></div>
+      <div><span>Monthly surplus</span><strong>₹{{ "%.2f"|format(data.income - data.expenses) }}</strong></div>
+    </div>
+  </div>
+</div>
+
+{% if scenario %}
+<div class="card what-if-result">
+  <div class="card-head">
+    <div>
+      <span class="badge">AI ANALYSIS</span>
+      <h2>MoneyWise's scenario result</h2>
+    </div>
+    <span class="tag">{{ scenario.difficulty }}</span>
+  </div>
+
+  <p class="what-if-action">If you <strong>{{ scenario.action }}</strong>:</p>
+
+  <div class="grid three">
+    <div class="stat-card">
+      <span>Extra over 6 months</span>
+      <strong>₹{{ "%.2f"|format(scenario.six_month_change) }}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Extra over 12 months</span>
+      <strong>₹{{ "%.2f"|format(scenario.twelve_month_change) }}</strong>
+    </div>
+    <div class="stat-card">
+      <span>New monthly surplus</span>
+      <strong>₹{{ "%.2f"|format(scenario.new_surplus) }}</strong>
+    </div>
+  </div>
+
+  <div class="ai-insight pattern">
+    <strong>✦ What the AI noticed</strong>
+    <p>{{ scenario.insight }}</p>
+  </div>
+  <div class="ai-insight positive">
+    <strong>Projection</strong>
+    <p>{{ scenario.outlook }}</p>
+  </div>
+  <p class="muted">{{ scenario.difficulty_note }}</p>
+
+  {% if scenario.months_to_extra_10000 %}
+  <div class="recommendation">
+    At this projected monthly surplus, ₹10,000 of additional surplus would take about <strong>{{ "%.1f"|format(scenario.months_to_extra_10000) }} months</strong>.
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>How the AI works</h2>
+  <div class="grid three">
+    <div class="mini-feature"><strong>1. Read</strong><p>Uses only your signed-in financial totals from SQLite.</p></div>
+    <div class="mini-feature"><strong>2. Simulate</strong><p>Runs transparent rules on the hypothetical change you enter.</p></div>
+    <div class="mini-feature"><strong>3. Explain</strong><p>Turns the calculation into an easy-to-understand financial insight.</p></div>
+  </div>
+</div>
+{% endblock %}
