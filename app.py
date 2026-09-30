@@ -6,6 +6,7 @@ from datetime import datetime
 from backend.database import get_db, init_db, seed_db
 from backend.recommendations import get_recommendations
 from backend.ai_insights import get_ai_insights
+from backend.what_if import analyze_what_if
 from backend.chatbot import answer
 from backend.quiz import get_quiz, grade_quiz
 
@@ -275,6 +276,23 @@ def chatbot():
 @login_required
 def ai_insights():
     return render_template("ai_insights.html", insights=get_ai_insights(session["user_id"]))
+
+@app.route("/what-if", methods=["GET", "POST"])
+@login_required
+def what_if():
+    uid = session["user_id"]
+    data = financial_data(uid)
+    scenario = None
+    if request.method == "POST":
+        try:
+            monthly_change = float(request.form.get("monthly_change", "0"))
+            mode = request.form.get("mode", "save_more")
+            if monthly_change < 0 or mode not in ("save_more", "reduce_expenses"):
+                raise ValueError()
+            scenario = analyze_what_if(data["income"], data["expenses"], data["saved"], monthly_change, mode)
+        except (ValueError, TypeError):
+            flash("Enter a valid positive scenario amount.", "error")
+    return render_template("what_if.html", data=data, scenario=scenario)
 
 @app.route("/api/summary")
 @login_required
