@@ -22,3 +22,52 @@
 .no-sidebar .main{margin-left:0!important;width:100%!important;min-width:0!important;}
 .no-sidebar .page{width:100%!important;max-width:none!important;margin:0!important;}
 .no-sidebar .topbar{width:100%!important;}
+
+/* Mobile navigation: collapse the permanent sidebar into an overlay menu. */
+@media(max-width:680px){
+  .sidebar{
+    width:250px!important;
+    transform:translateX(-100%)!important;
+    transition:transform .22s ease!important;
+    box-shadow:0 12px 40px rgba(0,0,0,.22);
+  }
+  .sidebar.open{transform:translateX(0)!important;}
+  .main{
+    margin-left:0!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  .menu-btn{
+    display:grid!important;
+    place-items:center;
+    width:42px;
+    height:42px;
+    margin-right:10px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:#fff;
+    color:#10231a;
+    cursor:pointer;
+    font-size:22px;
+    flex:0 0 auto;
+  }
+  .sidebar-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(16,35,26,.38);
+    z-index:900;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity .22s ease;
+  }
+  .sidebar-backdrop.show{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+}
+@media(min-width:681px){
+  .menu-btn{display:none!important;}
+  .sidebar-backdrop{display:none!important;}
+}
